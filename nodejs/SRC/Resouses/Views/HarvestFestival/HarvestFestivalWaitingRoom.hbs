@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  {{!-- <link rel="icon" href="/favicon.ico" /> --}}
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <title>Desktop - 9</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Spicy+Rice%3A400"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito%3A400"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto Mono%3A400"/>
+  <link rel="stylesheet" href="../main/styles/desktop-9.css"/>
+</head>
+<body>
+  <audio  id="audio" preload="auto" autoplay="auto" loop  >
+    <source type="audio/mp3" src="../main/assets/creepy-devil-dance-166764.mp3">
+</audio>
+<div class="desktop-3-gxM">
+  <div class="headeringame-Eiy">
+    <p class="code-kofm-MYh" id="code"></p>
+    <img class="vector-Gff" id="nut" src="../main/assets/vector-HXT.png"/>
+  </div>
+  <div class="auto-group-49mm-bT3">
+    <div class="auto-group-vegk-w17">
+      <p class="waiting-for-1-player-to-start-TVF" id="Count-Player">Waiting for 1 Player to start</p>
+      <div class="auto-group-avlb-zEH">
+          <!-- player 1 -->
+        <div class="auto-group-cmzm-CUm player" id="player1" style="display: none;">
+        <img class="mokey-1-JEy" src="../main/assets/mokey-1-WKP.png"/>
+        <p class="username4-XtR playerName" id="Player1-name">Username4</p>
+        </div>
+
+        <div class="auto-group-nt3h-rfo">
+          <!-- player2 -->
+          <div class="auto-group-cmzm-CUm player" id="player2" style="display: none;">
+            <img class="bat-1-jDo" src="../main/assets/bat-1-T1o.png"/>
+            <p class="username3-rZK playerName" id="Player2-name">Username3</p>
+          </div>
+          <img class="bm-2-ytq"  src="../main/assets/harvestroom-1.png"/>
+          <!-- player 3 -->
+          <div class="auto-group-dw1z-hZw player" id="player3" style="display: none;">
+            <p class="username1-3do playerName" id="Player3-name">Username1</p>
+            <img class="baby-1-MPb " src="../main/assets/baby-1-8Ym.png"/>
+          </div>
+        </div>
+        <!-- player 4 -->
+        <div class="auto-group-cmzm-CUm player" id="player4" style="display: none;">
+        <img class="chicken-1-4oo" src="../main/assets/chicken-1-n6Z.png"/>
+        <p class="username2-zSZ playerName" id="Player4-name">Username2</p>
+        </div>
+        <!-- <div class="auto-group-kboh-idT">Leave</div> -->
+      </div>
+      <div class="auto-group-kboh-idT" id="Leave">Leave</div>
+    </div>
+    <div class="auto-group-skfq-yJV">
+      <p class="chat-room-gyb">Chat Room</p>
+      <div class="chat" id="chat">
+  
+
+
+      </div>
+      <input id="chatbar" class="auto-group-5c4j-rBF" placeholder="Type Here to chat">
+    </div>
+
+  </div>
+</div>
+</body>
+<script src="../socket.io/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js" integrity="sha512-b94Z6431JyXY14iSXwgzeZurHHRNkLt9d6bAHt7BZT38eqV+GyngIi/tVye4jBKPYQ2lBdRs0glww4fmpuLRwA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script>
+var Leave=document.querySelector("#Leave");
+Leave.onclick=function(){
+  window.history.back();
+}
+var log=`{{id}}`;
+// js của Waiting-Room
+ var myDiv = document.getElementById("chat");
+ myDiv.innerHTML = '';
+var socket=io("http://localhost:3000");
+
+  function DeleteRoomInDatabase(data)
+    {   
+        data=JSON.stringify(data);
+        axios.post(`http://localhost:3000/HarvestFestival/edit`,data)
+            .then(response => {
+            console.log('Dữ liệu nhận được sau khi gửi POST request:', response.data);
+            })
+            .catch(error => {
+            console.error('Lỗi khi gửi POST request:', error);
+            }); 
+    }
+       socket.on("Server-Send-Room",function(data)
+    { 
+  
+        if (data[data.length-1].UserName === UserName)
+        {          
+            DeleteRoomInDatabase(data); 
+    
+        }
+    }) 
+
+
+ var player1=document.querySelector("#player1");
+ var player2=document.querySelector("#player2");
+ var player3=document.querySelector("#player3");
+ var player4=document.querySelector("#player4");
+var i=0;
+{{!-- var idPlayer=[]; --}}
+var code1='';
+var UserName='';
+var Loca='';
+var Of='';
+while (i<log.length&&log[i]!=',')
+{
+  code1+=log[i];
+  i++;
+}
+i++;
+while (i<log.length&&log[i]!=',')
+{
+UserName+=log[i];
+i++;
+}
+i++;
+while (i<log.length&&log[i]!=',')
+{
+Loca+=log[i];
+i++;
+}
+i++;
+while (i<log.length&&log[i]!=',')
+{
+Of+=log[i];
+i++;
+}
+
+ function decodeHtmlEntity(encodedString) {
+        var doc = new DOMParser().parseFromString(encodedString, 'text/html');
+        return doc.documentElement.textContent;
+    }
+    Of = decodeHtmlEntity(Of);
+  if (Loca==='my')
+    {  
+    // socket.emit("Create-Room",UserName+"'s Room");
+    // var randomNumber = Math.floor(Math.random() * (9000)) + 1000;
+    socket.emit("Create-Room", { UserName: UserName, RoomName: UserName + "'s Room",Code:code1 });
+    socket.emit("Create-Player");
+    socket.on("Player-At-TheMoment",function(data){
+      disPlayer(data);
+       });
+   
+    }
+    else
+    if (Loca==="your")
+    {   
+        socket.emit("Create-Room",{UserName: UserName, RoomName:Of});
+         socket.emit("Create-Player");
+         socket.on("Player-At-TheMoment",function(data){
+      disPlayer(data);
+       });
+    }
+
+var code=document.querySelector("#code");
+code.textContent+='Code: ';
+code.textContent+=code1;
+var UI=document.querySelectorAll(".player");
+var UI_name=document.querySelectorAll(".playerName");
+var countPlayer=document.querySelector("#Count-Player");
+   var rn;
+    if (Loca==='my')
+    rn=Of+"'s Room";
+else
+    rn=Of;
+ socket.emit("iWantToKnowMember",rn);
+    socket.on("memberWating",function(data){
+         t=4-data;
+        // console.log(t);
+        countPlayer.textContent=`Waiting for ${t.toString()} Player to start`;
+         });
+// sự kiện nhân vật xuất hiện
+function disPlayer(idPlayer)
+{
+  var i;
+  for (i=0;i<idPlayer.length;i++)
+  {
+    UI[i].style.display="Block";
+    UI_name[i].textContent=idPlayer[i].Use;
+    if (idPlayer[i].Use===UserName)
+    {
+       UI_name[i].style.animation="beautifulText 0.4s ease-in-out infinite alternate";
+    }
+    else
+    {
+    UI_name[i].style.animation="none";
+    }
+  }
+for (;i<UI.length;i++)
+{
+  UI[i].style.display="none";
+}
+}
+
+//nội dung chat cũ
+  var chat=document.querySelector("#chatbar");
+function addParagraph(mes) {
+    // Tạo một thẻ <p>
+    var newParagraph = document.createElement("p");
+    newParagraph.classList.add("usernam1-hello-DmX");
+    // Thêm nội dung cho thẻ <p> (có thể sửa đổi dòng này để thêm nội dung mong muốn)
+    var paragraphContent = document.createTextNode(mes);
+    newParagraph.appendChild(paragraphContent);
+
+    // Lấy thẻ <div> dựa trên ID
+    var myDiv = document.getElementById("chat");
+
+    // Thêm thẻ <p> vào bên trong thẻ <div>
+    myDiv.appendChild(newParagraph);
+    myDiv.scrollTop = myDiv.scrollHeight;
+  }
+  socket.on("chat-text",function(data){
+     myDiv.innerHTML = '';
+    for (var i=0;i<data.length;i++)
+    addParagraph(data[i].chat);
+  })
+  //end chat nội dung cũ
+  //xóa room khi out lần cuối
+   
+</script>
+
+<script src="../main/ScriptChung.js"></script>
